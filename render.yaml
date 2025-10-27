@@ -4,6 +4,3 @@ services:
     runtime: go
     buildCommand: go build -o amina-server main.go
     startCommand: ./amina-server
-    envVars:
-      - key: PORT
-        value: 8080

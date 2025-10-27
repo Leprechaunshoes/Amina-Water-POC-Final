@@ -67,14 +67,21 @@ func handleSim(w http.ResponseWriter, r *http.Request) {
 
 // --- Main Server ---
 func main() {
-	// Serve static files (HTML, CSS, JS)
-	fs := http.FileServer(http.Dir("."))
-	http.Handle("/", fs)
-	
 	// API endpoints
 	http.HandleFunc("/stats", handleStats)
 	http.HandleFunc("/last-donation", handleLastDonation)
 	http.HandleFunc("/simulate", handleSim)
+	
+	// Health check / root endpoint
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		enableCORS(w)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{
+			"status": "ok",
+			"message": "Amina Water Backend API",
+			"endpoints": "/stats, /last-donation, /simulate",
+		})
+	})
 
 	port := os.Getenv("PORT")
 	if port == "" {
