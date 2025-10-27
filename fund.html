@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amina Water • Humanity Fund</title>
+
+  <!-- Re-use your site styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* Light, additive styles that sit on top of your theme */
+    .page { max-width: 880px; margin: 40px auto; padding: 0 18px; }
+    .hero { text-align: center; margin-bottom: 18px; }
+    .hero img { width: 120px; height: 120px; object-fit: contain; filter: drop-shadow(0 0 18px rgba(57,208,255,.35)); }
+    .title { font-size: clamp(28px, 5vw, 40px); font-weight: 800; margin: 14px 0 6px; }
+    .sub { opacity:.9; font-size: 1.05rem; line-height: 1.5; }
+    .panel { background: rgba(255,255,255,0.05); border-radius: 14px; padding: 18px; margin: 20px 0; }
+    .row { display:flex; gap:14px; flex-wrap:wrap; }
+    .stat { flex:1 1 220px; background: rgba(255,255,255,0.06); border-radius:12px; padding:14px 16px; }
+    .stat h4 { margin:0 0 6px; opacity:.9; font-weight:700; }
+    .stat .big { font-size: 1.6rem; font-weight: 800; letter-spacing:.3px; }
+    .progress { height: 12px; background: rgba(255,255,255,0.1); border-radius: 8px; overflow:hidden; margin-top: 8px; }
+    .bar { height:100%; width:0%; background: linear-gradient(90deg,#39d0ff,#76ffd7); }
+    .actions { display:flex; gap:12px; flex-wrap:wrap; margin-top: 14px; }
+    .btn { text-decoration:none; padding:12px 16px; border-radius: 12px; background:#184d63; display:inline-block; font-weight:700; }
+    .btn.secondary { background:#233746; }
+    .muted { opacity:.8; }
+    .ok { color:#76ffd7; font-weight:700; }
+    footer { opacity:.8; font-size:.95rem; margin:28px 0; text-align:center; }
+    code.badge { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; padding:3px 6px; border-radius:8px; background: rgba(255,255,255,0.06); }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <!-- Header -->
+    <section class="hero">
+      <img src="coin.PNG" alt="Amina Coin" />
+      <div class="title">Humanity Fund</div>
+      <div class="sub">
+        Transparent by design. Every <b>1,000</b> verified Amina transfers triggers a <b>$100 ALGO</b> grant from the Humanity Fund to a live clean-water project.
+        Anyone can verify donations on-chain.
+      </div>
+    </section>
+
+    <!-- Live Transparency -->
+    <section class="panel">
+      <h3 style="margin:0 0 10px">Live Progress</h3>
+
+      <div class="row">
+        <div class="stat">
+          <h4>Current Counter</h4>
+          <div class="big"><span id="count">0</span> / <span id="goal">1000</span></div>
+          <div class="progress"><div id="bar" class="bar" style="width:0%"></div></div>
+        </div>
+        <div class="stat">
+          <h4>Last Donation</h4>
+          <div class="big"><span id="last">—</span></div>
+          <div class="muted" id="lastNote"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn" href="./index.html">← Back to Amina Water</a>
+        <!-- Explorer links for anyone to verify the Humanity Fund wallet on-chain -->
+        <a class="btn secondary" id="openAllo" target="_blank" rel="noreferrer">Open on Allo Explorer</a>
+        <a class="btn secondary" id="openAlgoExplorer" target="_blank" rel="noreferrer">Open on AlgoExplorer</a>
+        <!-- Demo button (only appears with ?demo=1) -->
+        <a class="btn" id="demo" style="display:none">+1 (demo)</a>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3 style="margin:0 0 8px">What you can verify</h3>
+      <ul class="muted" style="margin:8px 0 0 18px; line-height:1.6">
+        <li>Inbound Amina ASA transfers to the Humanity Fund address</li>
+        <li>Donation transactions sent from the Humanity Fund to project wallets</li>
+        <li>Grant history &amp; timestamps as they're recorded</li>
+      </ul>
+      <p class="muted" style="margin-top:10px">
+        Humanity Fund address: <code class="badge" id="fundAddrBadge"></code>
+      </p>
+    </section>
+
+    <footer>
+      © 2025 Amina Water • Transparency by Design
+    </footer>
+  </main>
+
+  <!-- Re-use your site's JS (BACKEND const lives here) -->
+  <script src="scripts.js"></script>
+  <script>
+    (function () {
+      // ====== Config (public) ======
+      const FUND_ADDR = "PZBPPJUHZ3UMENQHZO2HJKPCPTCYCAWY4FPW44XBOKSYIKPILJN76WMIBA"; // Humanity Fund
+      const GOAL = 1000;
+      const ASA_ID = 1107424865; // Amina Coin
+
+      // ====== Hooks ======
+      const $count = document.getElementById('count');
+      const $goal  = document.getElementById('goal');
+      const $bar   = document.getElementById('bar');
+      const $last  = document.getElementById('last');
+      const $lastNote = document.getElementById('lastNote');
+      const $demo  = document.getElementById('demo');
+      const $fundBadge = document.getElementById('fundAddrBadge');
+      const $openAllo = document.getElementById('openAllo');
+      const $openAlgoExplorer = document.getElementById('openAlgoExplorer');
+
+      $goal.textContent = GOAL.toString();
+      $fundBadge.textContent = FUND_ADDR;
+
+      // Explorer links
+      $openAllo.href = `https://allo.info/address/${FUND_ADDR}`;
+      $openAlgoExplorer.href = `https://algoexplorer.io/address/${FUND_ADDR}`;
+
+      // Show demo button only with ?demo=1
+      if (location.search.includes('demo=1')) {
+        $demo.style.display = 'inline-block';
+        $demo.addEventListener('click', async () => {
+          try { await fetch(BACKEND + '/simulate', { method: 'GET' }); load(); }
+          catch (e) {}
+        });
+      }
+
+      async function load() {
+        try {
+          const r = await fetch(BACKEND + '/stats', { cache: 'no-store' });
+          const data = await r.json();
+
+          const n = Number(data.totalTransfers || 0);
+          $count.textContent = n.toString();
+
+          const pct = Math.max(0, Math.min(100, Math.round((n / GOAL) * 100)));
+          $bar.style.width = pct + '%';
+
+          // Optional extra fields if your backend sets them
+          if (data.lastDonation && data.lastDonation !== "") {
+            $last.textContent = data.lastDonation;
+            $lastNote.textContent = "Last $100 grant recorded.";
+            $last.classList.add('ok');
+          } else {
+            $last.textContent = '—';
+            $lastNote.textContent = "No grant recorded yet.";
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // First load + refresh every 20s
+      load();
+      setInterval(load, 20000);
+    })();
+  </script>
+</body>
+</html>
