@@ -64,7 +64,7 @@
         <a class="btn" href="./index.html">← Back to Amina Water</a>
         <!-- Explorer links for anyone to verify the Humanity Fund wallet on-chain -->
         <a class="btn secondary" id="openAllo" target="_blank" rel="noreferrer">Open on Allo Explorer</a>
-        <a class="btn secondary" id="openAlgoExplorer" target="_blank" rel="noreferrer">Open on AlgoExplorer</a>
+        <a class="btn secondary" id="openAlgoExplorer" target="_blank" rel="noreferrer">Open on Pera Explorer</a>
         <!-- Demo button (only appears with ?demo=1) -->
         <a class="btn" id="demo" style="display:none">+1 (demo)</a>
       </div>
@@ -112,7 +112,7 @@
 
       // Explorer links
       $openAllo.href = `https://allo.info/address/${FUND_ADDR}`;
-      $openAlgoExplorer.href = `https://algoexplorer.io/address/${FUND_ADDR}`;
+      $openAlgoExplorer.href = `https://explorer.perawallet.app/address/${FUND_ADDR}/`;
 
       // Show demo button only with ?demo=1
       if (location.search.includes('demo=1')) {
