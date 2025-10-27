@@ -1,4 +1,4 @@
-const BACKEND = "https://your-backend-url"; // will be replaced with your Go backend later
+const BACKEND = "http://localhost:8080"; // Local Go backend
 
 async function load(){
   try {
