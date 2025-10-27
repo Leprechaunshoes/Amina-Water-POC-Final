@@ -1,7 +1,7 @@
-// Use localhost for development, or you can deploy backend separately
+// Auto-detect environment
 const BACKEND = window.location.hostname === 'localhost' 
   ? "http://localhost:8080" 
-  : "https://your-backend-url.com"; // Replace with your deployed backend URL
+  : "https://amina-water-backend.onrender.com"; // Will be updated with your actual Render URL
 
 async function load(){
   try {
