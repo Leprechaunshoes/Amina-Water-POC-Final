@@ -1,4 +1,7 @@
-const BACKEND = "http://localhost:8080"; // Local Go backend
+// Use localhost for development, or you can deploy backend separately
+const BACKEND = window.location.hostname === 'localhost' 
+  ? "http://localhost:8080" 
+  : "https://your-backend-url.com"; // Replace with your deployed backend URL
 
 async function load(){
   try {
@@ -16,7 +19,8 @@ async function load(){
         `<a href="https://allo.info/mainnet/transaction/${d.txnId}" target="_blank">${d.txnId.slice(0,12)}…</a>`;
     }
   } catch(e) {
-    console.log("Error:", e);
+    console.log("Backend not available:", e);
+    // Site will still work, just won't show live stats
   }
 }
 
