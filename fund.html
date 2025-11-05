@@ -50,7 +50,7 @@
       <div class="row">
         <div class="stat">
           <h4>Current Counter</h4>
-          <div class="big"><span id="count">0</span> / <span id="goal">1000</span></div>
+          <div class="big"><span id="count">0</span> / 1000</div>
           <div class="progress"><div id="bar" class="bar" style="width:0%"></div></div>
         </div>
         <div class="stat">
@@ -98,7 +98,6 @@
 
       // ====== Hooks ======
       const $count = document.getElementById('count');
-      const $goal  = document.getElementById('goal');
       const $bar   = document.getElementById('bar');
       const $last  = document.getElementById('last');
       const $lastNote = document.getElementById('lastNote');
@@ -107,7 +106,6 @@
       const $openAllo = document.getElementById('openAllo');
       const $openAlgoExplorer = document.getElementById('openAlgoExplorer');
 
-      $goal.textContent = GOAL.toString();
       $fundBadge.textContent = FUND_ADDR;
 
       // Explorer links
