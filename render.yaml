@@ -1,6 +1,19 @@
 services:
+  # Backend API - Go Server
   - type: web
     name: amina-water-backend
     runtime: go
+    plan: free
     buildCommand: go build -o amina-server main.go
     startCommand: ./amina-server
+    envVars:
+      - key: PORT
+        value: 8080
+
+  # Frontend - Static Site
+  - type: web
+    name: amina-water-site
+    plan: free
+    env: static
+    buildCommand: mkdir -p public && cp index.html fund.html style.css scripts.js coin.PNG public/
+    staticPublishPath: public
