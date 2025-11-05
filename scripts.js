@@ -9,11 +9,26 @@ async function load(){
     const total = s.totalTransfers || 0;
     const goal = 1000;
 
-    document.getElementById("count").textContent = `${total} / ${goal}`;
-    document.getElementById("bar").style.width = Math.min(100, (total / goal) * 100) + "%";
+    // Check if we're on fund.html (has a span#count) or index.html (has div#count)
+    const countEl = document.getElementById("count");
+    if (countEl) {
+      // If it's a span (fund.html), just set the number
+      if (countEl.tagName === 'SPAN') {
+        countEl.textContent = total.toString();
+      } else {
+        // If it's a div (index.html), set the full format
+        countEl.textContent = `${total} / ${goal}`;
+      }
+    }
+    
+    const barEl = document.getElementById("bar");
+    if (barEl) {
+      barEl.style.width = Math.min(100, (total / goal) * 100) + "%";
+    }
 
-    if (d.txnId) {
-      document.getElementById("last").innerHTML =
+    const lastEl = document.getElementById("last");
+    if (lastEl && d.txnId) {
+      lastEl.innerHTML =
         `<a href="https://allo.info/mainnet/transaction/${d.txnId}" target="_blank">${d.txnId.slice(0,12)}…</a>`;
     }
   } catch(e) {
