@@ -192,26 +192,45 @@ func handleSim(w http.ResponseWriter, r *http.Request) {
 
 // --- Main Server ---
 func main() {
-	log.Println("🌍 Amina Water Backend - Real Blockchain Monitoring")
+	log.Println("🌍 Amina Water - Real Blockchain Monitoring")
 	
 	// Start blockchain monitor in background
 	go monitorAminaSwaps()
 	
-	// API endpoints
-	http.HandleFunc("/stats", handleStats)
-	http.HandleFunc("/last-donation", handleLastDonation)
-	http.HandleFunc("/simulate", handleSim)
-	
-	// Health check / root endpoint
+	// Serve static files (HTML, CSS, JS, images)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		enableCORS(w)
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]string{
-			"status":    "ok",
-			"message":   "Amina Water Backend API - Monitoring Real Swaps",
-			"endpoints": "/stats, /last-donation, /simulate",
-			"aminaAsa":  fmt.Sprintf("%d", AMINA_ASA_ID),
-		})
+		// API endpoints
+		if r.URL.Path == "/stats" {
+			handleStats(w, r)
+			return
+		}
+		if r.URL.Path == "/last-donation" {
+			handleLastDonation(w, r)
+			return
+		}
+		if r.URL.Path == "/simulate" {
+			handleSim(w, r)
+			return
+		}
+		
+		// Serve static files
+		path := r.URL.Path
+		if path == "/" {
+			path = "/index.html"
+		}
+		
+		// Set content type based on file extension
+		contentType := "text/html"
+		if path == "/style.css" {
+			contentType = "text/css"
+		} else if path == "/scripts.js" {
+			contentType = "application/javascript"
+		} else if path == "/coin.PNG" {
+			contentType = "image/png"
+		}
+		
+		w.Header().Set("Content-Type", contentType)
+		http.ServeFile(w, r, "."+path)
 	})
 
 	port := os.Getenv("PORT")
@@ -220,5 +239,6 @@ func main() {
 	}
 
 	log.Println("🚀 Server running on port " + port)
+	log.Println("📊 Serving website and API at http://localhost:" + port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

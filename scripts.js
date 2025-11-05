@@ -1,7 +1,5 @@
-// Auto-detect environment
-const BACKEND = window.location.hostname === 'localhost' 
-  ? "http://localhost:8080" 
-  : "https://amina-water-backend.onrender.com"; // Will be updated with your actual Render URL
+// Auto-detect environment - use same server for everything
+const BACKEND = window.location.origin;
 
 async function load(){
   try {
@@ -26,3 +24,4 @@ async function load(){
 
 load();
 setInterval(load, 15000);
+

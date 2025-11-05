@@ -1,11 +1,6 @@
 services:
-  # Backend API - Go Server for blockchain monitoring
   - type: web
-    name: amina-water-backend
+    name: amina-water
     runtime: go
-    plan: free
     buildCommand: go build -o amina-server main.go
     startCommand: ./amina-server
-    envVars:
-      - key: PORT
-        generateValue: true
